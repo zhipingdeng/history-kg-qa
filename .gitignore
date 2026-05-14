@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+.env
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.coverage
+node_modules/
+/data/
+.hermes/
+.venv/
+frontend/package-lock.json
