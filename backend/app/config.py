@@ -11,13 +11,13 @@ class Settings(BaseSettings):
     # Neo4j
     neo4j_uri: str = "bolt://localhost:7687"
     neo4j_user: str = "neo4j"
-    neo4j_password: str = "kgqa123456"
+    neo4j_password: str = ""
 
     # MySQL
     mysql_host: str = "localhost"
     mysql_port: int = 3308
     mysql_user: str = "kgqa"
-    mysql_password: str = "kgqa123"
+    mysql_password: str = ""
     mysql_database: str = "history_kg_qa"
 
     # Embedding
@@ -30,7 +30,7 @@ class Settings(BaseSettings):
     milvus_collection: str = "kgqa_documents"
 
     # JWT
-    jwt_secret_key: str = "history-kgqa-secret-key-2026"
+    jwt_secret_key: str = ""
     jwt_algorithm: str = "HS256"
     jwt_expire_hours: int = 24
 
