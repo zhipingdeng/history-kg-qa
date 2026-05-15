@@ -6,13 +6,13 @@
       <!-- Welcome Section (when no messages) -->
       <div v-if="messages.length === 0" class="flex-1 flex items-center justify-center p-4">
         <div class="text-center max-w-2xl">
-          <div class="w-20 h-20 bg-gradient-to-br from-primary-500 to-purple-500 rounded-3xl flex items-center justify-center mx-auto mb-6">
+          <div class="w-20 h-20 bg-gradient-to-br from-amber-500 to-red-600 rounded-3xl flex items-center justify-center mx-auto mb-6">
             <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
           <h2 class="text-3xl font-bold text-gray-900 mb-3">历史知识问答</h2>
-          <p class="text-gray-500 mb-8 text-lg">基于知识图谱的智能问答，输入任何问题开始探索</p>
+          <p class="text-gray-500 mb-8 text-lg">探索历史长河，输入任何问题开始历史之旅</p>
           
           <!-- Recommended Questions -->
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-xl mx-auto">
@@ -20,10 +20,10 @@
               v-for="q in recommendedQuestions"
               :key="q"
               @click="sendMessage(q)"
-              class="p-4 bg-white rounded-xl border border-gray-200 hover:border-primary-300 hover:shadow-md transition-all text-left text-sm text-gray-700 hover:text-primary-600"
+              class="p-4 bg-white rounded-xl border border-gray-200 hover:border-amber-300 hover:shadow-md transition-all text-left text-sm text-gray-700 hover:text-amber-600"
             >
-              <svg class="w-4 h-4 text-primary-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+              <svg class="w-4 h-4 text-amber-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
               {{ q }}
             </button>
@@ -41,9 +41,9 @@
         >
           <!-- Assistant Avatar -->
           <div v-if="msg.role === 'assistant'" class="flex-shrink-0 mr-3">
-            <div class="w-8 h-8 bg-gradient-to-br from-primary-500 to-purple-500 rounded-full flex items-center justify-center">
+            <div class="w-8 h-8 bg-gradient-to-br from-amber-500 to-red-600 rounded-full flex items-center justify-center">
               <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
           </div>
@@ -68,8 +68,8 @@
 
           <!-- User Avatar -->
           <div v-if="msg.role === 'user'" class="flex-shrink-0 ml-3">
-            <div class="w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center">
-              <span class="text-sm font-medium text-primary-700">
+            <div class="w-8 h-8 bg-amber-100 rounded-full flex items-center justify-center">
+              <span class="text-sm font-medium text-amber-700">
                 {{ authStore.user?.username?.charAt(0).toUpperCase() }}
               </span>
             </div>
@@ -79,9 +79,9 @@
         <!-- Loading Indicator -->
         <div v-if="loading" class="flex justify-start">
           <div class="flex-shrink-0 mr-3">
-            <div class="w-8 h-8 bg-gradient-to-br from-primary-500 to-purple-500 rounded-full flex items-center justify-center">
+            <div class="w-8 h-8 bg-gradient-to-br from-amber-500 to-red-600 rounded-full flex items-center justify-center">
               <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
           </div>
@@ -101,14 +101,14 @@
           <input
             v-model="inputText"
             type="text"
-            placeholder="输入您的问题..."
+            placeholder="输入您的历史问题..."
             :disabled="loading"
-            class="flex-1 px-4 py-3 border border-gray-200 rounded-xl focus:border-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            class="flex-1 px-4 py-3 border border-gray-200 rounded-xl focus:border-amber-500 disabled:opacity-50 disabled:cursor-not-allowed"
           />
           <button
             type="submit"
             :disabled="!inputText.trim() || loading"
-            class="btn-primary text-white px-6 py-3 rounded-xl font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
+            class="bg-gradient-to-r from-amber-500 to-red-600 text-white px-6 py-3 rounded-xl font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center hover:from-amber-600 hover:to-red-700 transition-all"
           >
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
@@ -134,10 +134,10 @@ const loading = ref(false)
 const chatContainer = ref<HTMLElement>()
 
 const recommendedQuestions = [
-  '红色食品是什么？',
-  '大龙湫在哪里？',
-  '什么是人工智能？',
-  '太阳系有哪些行星？'
+  '秦始皇是谁？',
+  '丝绸之路是什么时候开辟的？',
+  '唐朝有哪些著名诗人？',
+  '长城是什么时候修建的？'
 ]
 
 async function sendMessage(text: string) {

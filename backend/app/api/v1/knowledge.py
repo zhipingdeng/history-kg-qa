@@ -26,7 +26,7 @@ async def get_knowledge_graph(
         for r in nodes_result
     ]
 
-    # Get edges (relationships between these nodes)
+    # Get edges (Entity -> Entity relationships)
     names = [n["name"] for n in nodes]
     edges_result = await neo4j.execute(
         "MATCH (a:Entity)-[r]->(b:Entity) "
@@ -39,5 +39,44 @@ async def get_knowledge_graph(
         {"source": r["source"], "target": r["target"], "type": r["rel_type"]}
         for r in edges_result
     ]
+    
+    # Get tag edges (Entity -> TagCategory)
+    tag_edges_result = await neo4j.execute(
+        "MATCH (a:Entity)-[r:TAG]->(t:TagCategory) "
+        "WHERE a.name IN $names "
+        "RETURN a.name AS source, t.name AS target, type(r) AS rel_type "
+        "LIMIT 500",
+        names=names,
+    )
+    edges.extend([
+        {"source": r["source"], "target": r["target"], "type": r["rel_type"]}
+        for r in tag_edges_result
+    ])
+    
+    # Get dynasty edges (Entity -> Dynasty)
+    dynasty_edges_result = await neo4j.execute(
+        "MATCH (a:Entity)-[r:BELONGS_TO_DYNASTY]->(d:Dynasty) "
+        "WHERE a.name IN $names "
+        "RETURN a.name AS source, d.name AS target, type(r) AS rel_type "
+        "LIMIT 100",
+        names=names,
+    )
+    edges.extend([
+        {"source": r["source"], "target": r["target"], "type": r["rel_type"]}
+        for r in dynasty_edges_result
+    ])
+    
+    # Get country edges (Entity -> Country)
+    country_edges_result = await neo4j.execute(
+        "MATCH (a:Entity)-[r:LOCATED_IN]->(c:Country) "
+        "WHERE a.name IN $names "
+        "RETURN a.name AS source, c.name AS target, type(r) AS rel_type "
+        "LIMIT 100",
+        names=names,
+    )
+    edges.extend([
+        {"source": r["source"], "target": r["target"], "type": r["rel_type"]}
+        for r in country_edges_result
+    ])
 
     return {"nodes": nodes, "edges": edges}

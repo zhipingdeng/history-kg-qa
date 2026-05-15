@@ -12,17 +12,17 @@ class HyDEGenerator:
 
     async def generate(self, question: str) -> str:
         prompt = self.build_prompt(question)
-        async with httpx.AsyncClient(timeout=30.0) as client:
+        async with httpx.AsyncClient(timeout=180.0) as client:
             resp = await client.post(
                 f"{self.base_url}/chat/completions",
                 headers={"Authorization": f"Bearer {self.api_key}"},
-                json={"model": self.model_name, "messages": [{"role": "user", "content": prompt}], "temperature": 0.3, "max_tokens": 256},
+                json={"model": self.model_name, "messages": [{"role": "user", "content": prompt}], "temperature": 0.3, "max_tokens": 1024},
             )
             resp.raise_for_status()
             msg = resp.json()["choices"][0]["message"]
             content = (msg.get("content") or "").strip()
             if not content:
-                reasoning = (msg.get("reasoning") or "").strip()
+                reasoning = (msg.get("reasoning_content") or msg.get("reasoning") or "").strip()
                 if reasoning:
                     paragraphs = [p.strip() for p in reasoning.split("\n") if p.strip()]
                     content = "\n".join(paragraphs[-2:])

@@ -12,26 +12,8 @@ Base.metadata.create_all(bind=engine)
 print('  Tables created.')
 "
 
-# Build Milvus + BM25 index if collection is empty or doesn't exist
-echo "==> Checking Milvus index..."
-python -c "
-import sys
-sys.path.insert(0, '.')
-from app.database.milvus_client import MilvusClient
-from app.config import get_settings
-s = get_settings()
-m = MilvusClient(host=s.milvus_host, port=s.milvus_port)
-if not m.has_collection(s.milvus_collection):
-    print('  Collection not found, building index...')
-    import subprocess
-    subprocess.run([sys.executable, 'scripts/build_index.py'], check=True)
-elif m.count(s.milvus_collection) == 0:
-    print('  Collection empty, building index...')
-    import subprocess
-    subprocess.run([sys.executable, 'scripts/build_index.py'], check=True)
-else:
-    print(f'  Index OK: {m.count(s.milvus_collection)} documents')
-"
+# Skip auto index build (run manually: python scripts/build_index.py)
+# Milvus index is pre-built or built externally
 
 echo "==> Starting server..."
 exec "$@"

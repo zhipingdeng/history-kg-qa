@@ -56,7 +56,7 @@ class AnswerGenerator:
 用户问题: {question}
 
 请用简洁的中文回答:"""
-        async with httpx.AsyncClient(timeout=60.0) as client:
+        async with httpx.AsyncClient(timeout=180.0) as client:
             response = await client.post(
                 f"{self.base_url}/chat/completions",
                 headers={"Authorization": f"Bearer {self.api_key}"},
@@ -66,7 +66,7 @@ class AnswerGenerator:
             msg = response.json()["choices"][0]["message"]
             content = (msg.get("content") or "").strip()
             if not content:
-                reasoning = (msg.get("reasoning") or "").strip()
+                reasoning = (msg.get("reasoning_content") or msg.get("reasoning") or "").strip()
                 if reasoning:
                     paragraphs = [p.strip() for p in reasoning.split("\n") if p.strip()]
                     content = "\n".join(paragraphs[-3:])
@@ -86,7 +86,7 @@ class AnswerGenerator:
             The LLM's answer string.
         """
         prompt = self.build_prompt(question, subgraph)
-        async with httpx.AsyncClient(timeout=60.0) as client:
+        async with httpx.AsyncClient(timeout=180.0) as client:
             response = await client.post(
                 f"{self.base_url}/chat/completions",
                 headers={"Authorization": f"Bearer {self.api_key}"},
@@ -104,7 +104,7 @@ class AnswerGenerator:
             # Prefer content; fall back to reasoning (thinking models)
             content = (msg.get("content") or "").strip()
             if not content:
-                reasoning = (msg.get("reasoning") or "").strip()
+                reasoning = (msg.get("reasoning_content") or msg.get("reasoning") or "").strip()
                 if reasoning:
                     # Extract the last paragraph as the actual answer
                     # (thinking models put reasoning first, answer last)

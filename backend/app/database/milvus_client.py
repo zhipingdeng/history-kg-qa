@@ -1,3 +1,4 @@
+import time
 from pymilvus import (
     connections, Collection, CollectionSchema,
     FieldSchema, DataType, utility,
@@ -6,11 +7,37 @@ from typing import Any
 
 
 class MilvusClient:
-    def __init__(self, host: str = "localhost", port: int = 19530, dim: int = 1024):
+    def __init__(self, host: str = "localhost", port: int = 19530, dim: int = 1024, max_retries: int = 5):
         self.host = host
         self.port = port
         self.dim = dim
-        connections.connect("default", host=host, port=port)
+        self.connected = False
+
+        # Try to connect with retries, but don't raise if Milvus is unavailable
+        for attempt in range(max_retries):
+            try:
+                connections.connect(
+                    "default",
+                    host=host,
+                    port=port,
+                    timeout=5,
+                )
+                self.connected = True
+                print(f"Connected to Milvus at {host}:{port}", flush=True)
+                return
+            except Exception as e:
+                if attempt < max_retries - 1:
+                    wait_time = min(2 ** attempt, 10)
+                    print(f"Milvus connection attempt {attempt + 1} failed: {e}. Retrying in {wait_time}s...", flush=True)
+                    time.sleep(wait_time)
+                else:
+                    print(f"WARNING: Milvus not available after {max_retries} attempts. Running in degraded mode (BM25 + Graph only).", flush=True)
+                    self.connected = False
+                    return
+
+    def _ensure_connected(self):
+        if not self.connected:
+            raise RuntimeError("Milvus is not connected")
 
     def _build_schema_fields(self) -> list[FieldSchema]:
         return [
@@ -22,6 +49,7 @@ class MilvusClient:
         ]
 
     def create_collection(self, name: str) -> None:
+        self._ensure_connected()
         schema = CollectionSchema(self._build_schema_fields())
         col = Collection(name, schema)
         col.create_index(
@@ -30,8 +58,8 @@ class MilvusClient:
         )
 
     def insert(self, collection: str, data: list[dict[str, Any]]) -> int:
+        self._ensure_connected()
         col = Collection(collection)
-        # data: [{text, entity_name, source, embedding}]
         texts = [d["text"] for d in data]
         entities = [d["entity_name"] for d in data]
         sources = [d.get("source", "") for d in data]
@@ -41,6 +69,7 @@ class MilvusClient:
         return mr.insert_count
 
     def search(self, collection: str, vector: list[float], top_k: int = 10) -> list[dict]:
+        self._ensure_connected()
         col = Collection(collection)
         col.load()
         results = col.search(
@@ -62,18 +91,22 @@ class MilvusClient:
         return output
 
     def has_collection(self, name: str) -> bool:
+        self._ensure_connected()
         return utility.has_collection(name)
 
     def drop_collection(self, name: str) -> None:
+        self._ensure_connected()
         col = Collection(name)
         col.drop()
 
     def count(self, collection: str) -> int:
+        self._ensure_connected()
         col = Collection(collection)
         return col.num_entities
 
     def load_all_docs(self, collection: str) -> list[dict]:
         """Load all documents from collection for BM25 index."""
+        self._ensure_connected()
         col = Collection(collection)
         col.load()
         results = col.query(

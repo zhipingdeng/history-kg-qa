@@ -39,7 +39,7 @@ class HybridRetriever:
 
         1. Query rewriting (optional)
         2. HyDE + query embedding (concurrent)
-        3. Vector search with query + HyDE + rewritten queries (concurrent)
+        3. Vector search with query + HyDE + rewritten queries (concurrent) [if Milvus available]
         4. BM25 search with all query variants (concurrent)
         5. Graph retrieval for entities found in query
         6. RRF merge of vector + BM25 results
@@ -64,23 +64,25 @@ class HybridRetriever:
         bm25_task = asyncio.to_thread(self.bm25.search, query, top_k)
         hyde_vec, bm25_main = await asyncio.gather(hyde_vec_task, bm25_task)
 
-        # Step 4: Milvus vector searches (concurrent)
-        search_tasks = [
-            asyncio.to_thread(self.milvus.search, self.collection, query_vec, top_k),
-            asyncio.to_thread(self.milvus.search, self.collection, hyde_vec, top_k),
-        ]
+        # Step 4: Milvus vector searches (skip if Milvus unavailable)
+        vector_results_list = []
+        if self.milvus.connected:
+            search_tasks = [
+                asyncio.to_thread(self.milvus.search, self.collection, query_vec, top_k),
+                asyncio.to_thread(self.milvus.search, self.collection, hyde_vec, top_k),
+            ]
 
-        # Add searches for rewritten query variants
-        for q in queries[1:]:
-            q_vec = await self.embedding.embed(q)
-            search_tasks.append(
-                asyncio.to_thread(self.milvus.search, self.collection, q_vec, top_k)
-            )
+            # Add searches for rewritten query variants
+            for q in queries[1:]:
+                q_vec = await self.embedding.embed(q)
+                search_tasks.append(
+                    asyncio.to_thread(self.milvus.search, self.collection, q_vec, top_k)
+                )
 
-        vector_results_list = await asyncio.gather(*search_tasks)
+            vector_results_list = await asyncio.gather(*search_tasks, return_exceptions=True)
 
         # Step 5: BM25 for rewritten queries
-        all_bm25 = [bm25_main]
+        all_bm25 = [bm25_task]
         for q in queries[1:]:
             all_bm25.append(asyncio.to_thread(self.bm25.search, q, top_k))
         if len(all_bm25) > 1:
@@ -93,11 +95,11 @@ class HybridRetriever:
         graph_context = await self._graph_retrieve(query)
 
         # Step 7: RRF fusion of all vector + BM25 results
-        all_lists = list(vector_results_list) + all_bm25_results
+        all_lists = [r for r in vector_results_list if not isinstance(r, Exception)] + all_bm25_results
         fused = self.rrf.merge(all_lists, top_k=top_k)
 
         return {
-            "vector_results": list(vector_results_list[0])[:5],
+            "vector_results": list(vector_results_list[0])[:5] if vector_results_list else [],
             "bm25_results": bm25_main[:5],
             "graph_results": graph_context,
             "fused_results": fused,

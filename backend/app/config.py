@@ -9,9 +9,9 @@ class Settings(BaseSettings):
     llm_api_key: str = "ollama"
 
     # Neo4j
-    neo4j_uri: str = "bolt://localhost:7688"
+    neo4j_uri: str = "bolt://localhost:7687"
     neo4j_user: str = "neo4j"
-    neo4j_password: str = "kgqa123"
+    neo4j_password: str = "kgqa123456"
 
     # MySQL
     mysql_host: str = "localhost"

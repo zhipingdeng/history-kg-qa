@@ -22,7 +22,7 @@ class QueryRewriter:
 
 改写："""
         try:
-            async with httpx.AsyncClient(timeout=15.0) as client:
+            async with httpx.AsyncClient(timeout=180.0) as client:
                 resp = await client.post(
                     f"{self.base_url}/chat/completions",
                     headers={"Authorization": f"Bearer {self.api_key}"},
@@ -30,13 +30,18 @@ class QueryRewriter:
                         "model": self.model,
                         "messages": [{"role": "user", "content": prompt}],
                         "temperature": 0.5,
-                        "max_tokens": 256,
+                        "max_tokens": 1024,
                     },
                 )
                 resp.raise_for_status()
                 data = resp.json()
                 msg = data["choices"][0]["message"]
-                text = (msg.get("content") or msg.get("reasoning") or "").strip()
+                text = (msg.get("content") or "").strip()
+                if not text:
+                    reasoning = (msg.get("reasoning_content") or msg.get("reasoning") or "").strip()
+                    if reasoning:
+                        paragraphs = [p.strip() for p in reasoning.split("\n") if p.strip()]
+                        text = "\n".join(paragraphs[-3:])
                 # Remove thinking tags if present
                 if "<think>" in text:
                     import re

@@ -5,13 +5,13 @@
       <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
         <!-- Header -->
         <div class="p-8 pb-6 text-center">
-          <div class="w-16 h-16 bg-gradient-to-br from-primary-500 to-purple-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
+          <div class="w-16 h-16 bg-gradient-to-br from-amber-500 to-red-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
             <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
           <h1 class="text-2xl font-bold text-gray-900">历史知识问答</h1>
-          <p class="text-gray-500 mt-2">基于知识图谱的智能问答系统</p>
+          <p class="text-gray-500 mt-2">基于知识图谱的智能历史问答系统</p>
         </div>
 
         <!-- Tabs -->
@@ -21,12 +21,12 @@
             :key="tab.key"
             @click="activeTab = tab.key"
             class="flex-1 py-3 text-sm font-medium transition-colors relative"
-            :class="activeTab === tab.key ? 'text-primary-600' : 'text-gray-500 hover:text-gray-700'"
+            :class="activeTab === tab.key ? 'text-amber-600' : 'text-gray-500 hover:text-gray-700'"
           >
             {{ tab.label }}
             <div
               v-if="activeTab === tab.key"
-              class="absolute bottom-0 left-0 right-0 h-0.5 bg-primary-500"
+              class="absolute bottom-0 left-0 right-0 h-0.5 bg-amber-500"
             />
           </button>
         </div>
@@ -47,7 +47,7 @@
                 type="text"
                 required
                 placeholder="请输入用户名"
-                class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:border-primary-500 transition-colors"
+                class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:border-amber-500 transition-colors"
               />
             </div>
             <div>
@@ -57,13 +57,13 @@
                 type="password"
                 required
                 placeholder="请输入密码"
-                class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:border-primary-500 transition-colors"
+                class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:border-amber-500 transition-colors"
               />
             </div>
             <button
               type="submit"
               :disabled="loading"
-              class="w-full btn-primary text-white py-3 rounded-xl font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+              class="w-full bg-gradient-to-r from-amber-500 to-red-600 text-white py-3 rounded-xl font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:from-amber-600 hover:to-red-700 transition-all"
             >
               <span v-if="loading" class="flex items-center justify-center">
                 <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
@@ -85,7 +85,7 @@
                 type="text"
                 required
                 placeholder="请输入用户名"
-                class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:border-primary-500 transition-colors"
+                class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:border-amber-500 transition-colors"
               />
             </div>
             <div>
@@ -95,7 +95,7 @@
                 type="email"
                 required
                 placeholder="请输入邮箱"
-                class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:border-primary-500 transition-colors"
+                class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:border-amber-500 transition-colors"
               />
             </div>
             <div>
@@ -105,7 +105,7 @@
                 type="password"
                 required
                 placeholder="请输入密码"
-                class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:border-primary-500 transition-colors"
+                class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:border-amber-500 transition-colors"
               />
             </div>
             <div>
@@ -115,13 +115,13 @@
                 type="password"
                 required
                 placeholder="请再次输入密码"
-                class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:border-primary-500 transition-colors"
+                class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:border-amber-500 transition-colors"
               />
             </div>
             <button
               type="submit"
               :disabled="loading"
-              class="w-full btn-primary text-white py-3 rounded-xl font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+              class="w-full bg-gradient-to-r from-amber-500 to-red-600 text-white py-3 rounded-xl font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:from-amber-600 hover:to-red-700 transition-all"
             >
               <span v-if="loading" class="flex items-center justify-center">
                 <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
