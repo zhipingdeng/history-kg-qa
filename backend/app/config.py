@@ -18,6 +18,7 @@ class Settings(BaseSettings):
     mysql_port: int = 3308
     mysql_user: str = "kgqa"
     mysql_password: str = ""
+    mysql_root_password: str = ""
     mysql_database: str = "history_kg_qa"
 
     # Embedding
