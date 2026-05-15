@@ -116,7 +116,7 @@ docker-compose up -d
 - 前端: http://localhost:81
 - 后端 API: http://localhost:8001
 - API 文档: http://localhost:8001/docs
-- Neo4j: http://localhost:7475 (neo4j/kgqa123)
+- Neo4j: http://localhost:7475 (neo4j/your_password)
 
 ### 方式二：本地开发
 

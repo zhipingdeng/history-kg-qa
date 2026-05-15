@@ -10,7 +10,7 @@ _engine = None
 _SessionLocal = None
 
 
-def get_engine(host="localhost", port=3308, user="kgqa", password="kgqa123", database="history_kg_qa"):
+def get_engine(host="localhost", port=3308, user="kgqa", password="", database="history_kg_qa"):
     global _engine
     if _engine is None:
         url = f"mysql+pymysql://{user}:{password}@{host}:{port}/{database}?charset=utf8mb4"
